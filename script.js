@@ -93,6 +93,7 @@ function giveNotification(msg) {
         });
     }
 }
+giveNotification('Notification Allowed !')
 
 // const notification = new Notification("Hi there!");
 startBtn.addEventListener('click', start)
