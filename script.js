@@ -56,17 +56,17 @@ function start() {
             seconds--
             if (minutes === 0 && seconds === 0) {
                 let isActive = isFocusActive()
-                if(isActive)  {
+                if (isActive) {
                     switchToPause()
                     giveNotification("It's time for a break")
-                } else{
-                    switchToFocus()   
+                } else {
+                    switchToFocus()
                     giveNotification("Time to focus !")
-                } 
+                }
                 clearInterval(intvl)
             }
             timer.innerHTML = `${minutes < 10 ? `0${minutes}` : minutes}:${seconds < 10 ? `0${seconds}` : seconds}`
-        }, 1000);
+        }, 1);
     } else {
         pauseTimer()
         clearInterval(intvl)
@@ -82,7 +82,14 @@ function giveNotification(msg) {
         // Check whether notification permissions have already been granted;
         // if so, create a notification
         // …
-        const notification = new Notification(msg, {icon:'/favicon.svg'});
+        const notification = new Notification(msg, { icon: '/favicon.svg' });
+        notification.onclick = (event) => {
+            event.preventDefault(); // prevent the browser from focusing the Notification's tab
+            if (document.hidden) { // Check if the tab is inactive (hidden)
+                window.focus(); // Focus the tab
+            }
+        };
+
     } else if (Notification.permission !== "denied") {
         // We need to ask the user for permission
         Notification.requestPermission().then((permission) => {
@@ -93,8 +100,6 @@ function giveNotification(msg) {
         });
     }
 }
-giveNotification('Notification Allowed !')
-
 // const notification = new Notification("Hi there!");
 startBtn.addEventListener('click', start)
 
