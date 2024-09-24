@@ -58,10 +58,10 @@ function start() {
                 let isActive = isFocusActive()
                 if (isActive) {
                     switchToPause()
-                    giveNotification("It's time for a break")
+                    sendNotification("It's time for a break")
                 } else {
                     switchToFocus()
-                    giveNotification("Time to focus !")
+                    sendNotification("Time to focus !")
                 }
                 clearInterval(intvl)
             }
@@ -73,34 +73,6 @@ function start() {
     }
 
 }
-
-function giveNotification(msg) {
-    if (!("Notification" in window)) {
-        // Check if the browser supports notifications
-        alert("This browser does not support desktop notification");
-    } else if (Notification.permission === "granted") {
-        // Check whether notification permissions have already been granted;
-        // if so, create a notification
-        // …
-        const notification = new Notification(msg, { icon: '/favicon.svg' });
-        notification.onclick = (event) => {
-            event.preventDefault(); // prevent the browser from focusing the Notification's tab
-            if (document.hidden) { // Check if the tab is inactive (hidden)
-                window.focus(); // Focus the tab
-            }
-        };
-
-    } else if (Notification.permission !== "denied") {
-        // We need to ask the user for permission
-        Notification.requestPermission().then((permission) => {
-            // If the user accepts, let's create a notification
-            if (permission === "granted") {
-                // …
-            }
-        });
-    }
-}
-// const notification = new Notification("Hi there!");
 startBtn.addEventListener('click', start)
 
 function reset(min) {
@@ -180,3 +152,34 @@ function resetTimer() {
     saveChanges()
 }
 document.getElementById("resetbtn-modal").addEventListener("click", resetTimer)
+
+
+function sendNotification(msg) {
+    const notification = new Notification(msg, { icon: '/favicon.svg' });
+    notification.onclick = (event) => {
+        event.preventDefault(); // prevent the browser from focusing the Notification's tab
+        if (document.hidden) { // Check if the tab is inactive (hidden)
+            window.focus(); // Focus the tab
+        }
+    };
+}
+
+function checkNotificationPermission() {
+    if (!("Notification" in window)) {
+        alert("This browser does not support desktop notification");
+    } else if (Notification.permission === "granted") {
+        localStorage.setItem("notification", true)
+
+    } else if (Notification.permission !== "denied") {
+        // We need to ask the user for permission
+        localStorage.setItem("notification", false)
+        Notification.requestPermission().then((permission) => {
+            if (permission === "granted") {
+                localStorage.setItem("notification", true)
+            }
+        });
+    }
+}
+checkNotificationPermission()
+const isNotificationAllowed = JSON.parse(localStorage.getItem("notification")) || false;
+!isNotificationAllowed && checkNotificationPermission("Notification Allowed !");
