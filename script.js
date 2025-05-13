@@ -1,3 +1,12 @@
+// Register service worker
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+            .then(() => console.log('Service Worker Registered'))
+            .catch(err => console.error('Service Worker registration failed:', err));
+    });
+}
+
 const timer = document.getElementById("timer");
 const startBtn = document.getElementById("start-btn");
 const resetBtn = document.getElementById("reset-btn");
@@ -66,7 +75,7 @@ function start() {
                 clearInterval(intvl)
             }
             timer.innerHTML = `${minutes < 10 ? `0${minutes}` : minutes}:${seconds < 10 ? `0${seconds}` : seconds}`
-        }, 1000);
+        }, 10);
     } else {
         pauseTimer()
         clearInterval(intvl)
@@ -155,13 +164,17 @@ document.getElementById("resetbtn-modal").addEventListener("click", resetTimer)
 
 
 function sendNotification(msg) {
-    const notification = new Notification(msg, { icon: '/favicon.svg' });
-    notification.onclick = (event) => {
-        event.preventDefault(); // prevent the browser from focusing the Notification's tab
-        if (document.hidden) { // Check if the tab is inactive (hidden)
-            window.focus(); // Focus the tab
-        }
-    };
+    if (Notification.permission === 'granted') {
+        navigator.serviceWorker.getRegistration().then(function (reg) {
+            reg.showNotification(msg, {
+                icon: '/favicon.svg',
+                body: msg,
+                vibrate: [200, 100, 200],
+                tag: 'pomodoro-notification',
+                renotify: true
+            });
+        });
+    }
 }
 
 function checkNotificationPermission() {
