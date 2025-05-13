@@ -177,7 +177,7 @@ function sendNotification(msg) {
                 tag: 'pomodoro-notification',
                 renotify: true,
                 data: {
-                    url: window.location.href // This captures the current page URL
+                    url: window.location.href
                 }
             });
         });
