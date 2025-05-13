@@ -2,12 +2,12 @@
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         // Adjust the path based on your GitHub Pages URL structure
-        const swPath = '/Pomodoro/sw.js'; // Update 'Pomodoro' with your repository name
+        const swPath = '/pomodoro-timer/sw.js'; // Update 'Pomodoro' with your repository name
         navigator.serviceWorker.register(swPath, {
-            scope: '/Pomodoro/' // Update this to match your repository name
+            scope: '/pomodoro-timer/' // Update this to match your repository name
         })
-        .then(() => console.log('Service Worker Registered'))
-        .catch(err => console.error('Service Worker registration failed:', err));
+            .then(() => console.log('Service Worker Registered'))
+            .catch(err => console.error('Service Worker registration failed:', err));
     });
 }
 
