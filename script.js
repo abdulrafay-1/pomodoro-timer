@@ -79,7 +79,7 @@ function start() {
                 clearInterval(intvl)
             }
             timer.innerHTML = `${minutes < 10 ? `0${minutes}` : minutes}:${seconds < 10 ? `0${seconds}` : seconds}`
-        }, 10);
+        }, 1000);
     } else {
         pauseTimer()
         clearInterval(intvl)
